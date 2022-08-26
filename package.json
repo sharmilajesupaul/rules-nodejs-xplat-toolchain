@@ -1,0 +1,10 @@
+{
+  "name": "bazel-rules-nodejs-repro",
+  "version": "1.0.0",
+  "description": "repro local remote toolchain compatiblity issues",
+  "main": "index.js",
+  "author": "Sharmila Jesupaul <tosharmila@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {}
+}

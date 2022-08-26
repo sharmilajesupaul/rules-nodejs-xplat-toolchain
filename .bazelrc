@@ -1,0 +1,48 @@
+
+# https://docs.bazel.build/versions/main/user-manual.html#flag--symlink_prefix
+build --symlink_prefix=bazel-dist/
+
+# Improve performance of sandboxing by reusing the sandbox directories
+# https://docs.bazel.build/versions/main/command-line-reference.html#flag--experimental_reuse_sandbox_directories
+# https://github.com/bazelbuild/bazel/commit/1adb5128
+build --experimental_reuse_sandbox_directories
+
+build --strategy=LocalAction=local
+build --strategy=RemoteAction=remote
+
+
+# # # # # # # #
+# UPDATE THIS #
+# # # # # # # #
+build:xplat --bes_backend=grpcs://MY_ENGFLOW_CLUSTER
+build:xplat --bes_results_url=https://MY_ENGFLOW_CLUSTER/invocation/
+# # # # # # # #
+
+# Cross Platform Configuration (osx <-> linux)
+build:xplat --jobs=120
+build:xplat --host_javabase=@rbe_default//java:jdk
+build:xplat --javabase=@rbe_default//java:jdk
+build:xplat --java_runtime_version=remotejdk_11
+build:xplat --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
+build:xplat --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build:xplat --extra_execution_platforms=@rbe_default//config:platform
+build:xplat --host_platform=@rbe_default//config:platform
+build:xplat --platforms=@rbe_default//config:platform
+build:xplat --define=EXECUTOR=remote
+build:xplat --incompatible_strict_action_env=true
+build:xplat --nojava_header_compilation
+
+build:remote --config=xplat
+
+build:remote --strategy=CopyDirectory=local
+build:remote --spawn_strategy=remote
+build:remote --strategy=Babel=remote
+build:remote --remote_local_fallback=false
+build:remote --define=EXECUTOR=remote
+build:remote --disk_cache=
+build:remote --experimental_inmemory_dotd_files
+build:remote --experimental_inmemory_jdeps_files
+build:remote --incompatible_strict_action_env=true
+build:remote --spawn_strategy=remote
+build:remote --remote_download_minimal
+build:remote --remote_default_exec_properties="OSFamily=Linux"

@@ -1,0 +1,56 @@
+workspace(
+    name = "bazel-rules-nodejs-repro",
+    managed_directories = {"@npm": ["node_modules"]},
+)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_jar")
+
+rules_nodejs_version = "5.5.2"
+
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "c78216f5be5d451a42275b0b7dc809fb9347e2b04a68f68bad620a2b01f5c774",
+    urls = [
+        "https://github.com/bazelbuild/rules_nodejs/releases/download/" + rules_nodejs_version + "/rules_nodejs-" + rules_nodejs_version + ".tar.gz",
+    ],
+)
+
+http_archive(
+    name = "rules_nodejs",
+    sha256 = "017e2348bb8431156d5cf89b6f502c2e7fcffc568729f74f89e4a12bd8279e90",
+    urls = [
+        "https://github.com/bazelbuild/rules_nodejs/releases/download/" + rules_nodejs_version + "/rules_nodejs-core-" + rules_nodejs_version + ".tar.gz",
+    ],
+)
+
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "1c531376ac7e5a180e0237938a2536de0c54d93f5c278634818e0efc952dd56c",
+    urls = [
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.0.3/bazel-skylib-1.0.3.tar.gz",
+    ],
+)
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_urls = [
+        "https://nodejs.org/dist/v{version}/{filename}",
+    ],
+    node_version = "16.10.0",
+)
+
+local_repository(
+    name = "rbe_default",
+    path = "configs/rbe_default",
+)

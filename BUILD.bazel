@@ -1,0 +1,14 @@
+
+load('//bazel/local_rule:local_rule.bzl', 'local_rule')
+load('//bazel/remote_rule:remote_rule.bzl', 'remote_rule')
+
+local_rule(
+    name = 'local_rule',
+)
+
+remote_rule(
+    name = 'remote_rule',
+    data = [
+        ':local_rule',
+    ]
+)
