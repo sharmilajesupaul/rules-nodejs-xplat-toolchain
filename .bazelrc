@@ -8,7 +8,6 @@ build --symlink_prefix=bazel-dist/
 build --experimental_reuse_sandbox_directories
 
 build --strategy=LocalAction=local
-build --strategy=RemoteAction=remote
 
 
 # # # # # # # #
@@ -34,15 +33,14 @@ build:xplat --nojava_header_compilation
 
 build:remote --config=xplat
 
+build:remote --strategy=RemoteAction=remote
 build:remote --strategy=CopyDirectory=local
 build:remote --spawn_strategy=remote
-build:remote --strategy=Babel=remote
 build:remote --remote_local_fallback=false
 build:remote --define=EXECUTOR=remote
 build:remote --disk_cache=
 build:remote --experimental_inmemory_dotd_files
 build:remote --experimental_inmemory_jdeps_files
 build:remote --incompatible_strict_action_env=true
-build:remote --spawn_strategy=remote
 build:remote --remote_download_minimal
 build:remote --remote_default_exec_properties="OSFamily=Linux"

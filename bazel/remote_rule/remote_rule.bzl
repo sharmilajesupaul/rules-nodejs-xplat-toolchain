@@ -5,7 +5,7 @@ def _impl(ctx):
     ctx.actions.run_shell(
         mnemonic = "RemoteAction",
         outputs = [output],
-        inputs = [],
+        inputs = [ctx.file.script],
         command = "{script} {node_bin} {out}".format(
             script = ctx.executable.script.path,
             node_bin = node_toolchain.target_tool_path,
